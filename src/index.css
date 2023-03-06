@@ -10,3 +10,10 @@ a {
 a:hover {
     color: white;
 }
+
+thead {
+    position: sticky;
+    top: 0;
+    background-color: #e0e0e0;
+    text-align: center;
+}

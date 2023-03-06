@@ -1,9 +1,10 @@
 import { useState } from "react"
+import { useTransactionsStore } from "../hooks/useTransactionsStore"
 
 export const Create = () => {
 
     const [counter, setCounter] = useState(1)
-
+    const { addNewTransaction } = useTransactionsStore()
     const options = []
 
     for (var i = 0; i < counter; i++) {
@@ -30,7 +31,11 @@ export const Create = () => {
             data[`haber_${i}`] = formData.get(`haber_${i}`);
         }
 
-        console.log(data)
+        if (data.cod_cuenta_0 === '' && data.cuenta_0 === '' && data.debe_0 === '' && data.haber_0 === '') {
+            console.log('vacio')
+        } else {
+            addNewTransaction(data)
+        }
     }
 
     const subtractRow = (e) => {
@@ -40,15 +45,13 @@ export const Create = () => {
 
     const addRow = (e) => {
         e.preventDefault()
-        if (counter < 10) {
-            setCounter(counter + 1)
-        }
+        setCounter(counter + 1)
     }
 
     const totalDebe = Array.from(document.querySelectorAll('input[name^="debe_"]'))
         .reduce((total, input) => total + Number(input.value), 0)
 
-        const totalHaber = Array.from(document.querySelectorAll('input[name^="haber_"]'))
+    const totalHaber = Array.from(document.querySelectorAll('input[name^="haber_"]'))
         .reduce((total, input) => total + Number(input.value), 0)
 
     return (
@@ -70,14 +73,13 @@ export const Create = () => {
                             {
                                 (counter > 1) && <td><button className="btn btn-outline-danger" onClick={subtractRow}>Eliminar última fila</button></td>
                             }
-                            <td className="text-center" name="total-debe"><h5>Total: <b>${totalDebe.toFixed(2)}</b></h5></td>
-                            <td className="text-center" name="total-haber"><h5>Total: <b>${totalHaber.toFixed(2)}</b></h5></td>
+                            <td className="text-center" name="total-debe"><h5><b>${totalDebe.toFixed(2)}</b></h5></td>
+                            <td className="text-center" name="total-haber"><h5><b>${totalHaber.toFixed(2)}</b></h5></td>
                         </tr>
                     </tbody>
                 </table>
                 <div className="d-flex justify-content-end">
-                    <button className="btn btn-outline-danger me-3">Cancelar</button>
-                    <button className="btn btn-outline-success" type="submit">Guardar</button>
+                    <button className="btn btn-outline-success me-3 mb-3" type="submit">Listo</button>
                 </div>
             </form>
         </div>

@@ -5,7 +5,6 @@ export const authSlice = createSlice({
     initialState: {
         status: 'checking',
         email: null,
-        password: null
     },
     reducers: {
         onChecking: (state) => {
@@ -16,12 +15,10 @@ export const authSlice = createSlice({
         onLogin: (state, { payload }) => {
             state.status = 'auth'
             state.email = payload.email
-            state.password = payload.password
         },
         onLogout: (state) => {
             state.status = 'not-auth'
             state.email = null
-            state.password = null
         }
     },
 })

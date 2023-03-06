@@ -4,14 +4,13 @@ import { onChecking, onLogin, onLogout } from "../store/authSlice"
 
 export const useAuthStore = () => {
 
-    const { status, email, password } = useSelector(state => state.auth)
+    const { status, email } = useSelector(state => state.auth)
     const dispatch = useDispatch()
 
     const startLogin = async ({ email, password }) => {
         dispatch(onChecking())
         try {
             const { data } = await tpApi.post('/login', { email, password })
-
             if (data.msg === 'NotRegisteredEmail') {
                 Swal.fire({
                     position: 'top-end',
@@ -51,7 +50,6 @@ export const useAuthStore = () => {
         dispatch(onChecking())
         try {
             const { data } = await tpApi.post('/register', { email, password })
-
             if (data.msg === 'UserCrated') {
                 Swal.fire({
                     position: 'top-end',
