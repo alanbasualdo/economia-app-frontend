@@ -9,12 +9,28 @@ export const Create = () => {
     for (var i = 0; i < counter; i++) {
         options.push(
             <tr key={i}>
-                <th scope="row"><input type="number" className="form-control" /></th>
-                <td><input type="text" className="form-control" /></td>
-                <td><input type="number" className="form-control" /></td>
-                <td><input type="number" className="form-control" /></td>
+                <th scope="row"><input type="number" className="form-control" name={`cod_cuenta_${i}`} /></th>
+                <td><input type="text" className="form-control" name={`cuenta_${i}`} /></td>
+                <td><input type="number" className="form-control" name={`debe_${i}`} /></td>
+                <td><input type="number" className="form-control" name={`haber_${i}`} /></td>
             </tr>
         )
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault()
+
+        const formData = new FormData(event.target)
+
+        const data = {};
+        for (let i = 0; i < counter; i++) {
+            data[`cod_cuenta_${i}`] = formData.get(`cod_cuenta_${i}`);
+            data[`cuenta_${i}`] = formData.get(`cuenta_${i}`);
+            data[`debe_${i}`] = formData.get(`debe_${i}`);
+            data[`haber_${i}`] = formData.get(`haber_${i}`);
+        }
+
+        console.log(data)
     }
 
     const subtractRow = (e) => {
@@ -24,12 +40,20 @@ export const Create = () => {
 
     const addRow = (e) => {
         e.preventDefault()
-        setCounter(counter + 1)
+        if (counter < 10) {
+            setCounter(counter + 1)
+        }
     }
+
+    const totalDebe = Array.from(document.querySelectorAll('input[name^="debe_"]'))
+        .reduce((total, input) => total + Number(input.value), 0)
+
+        const totalHaber = Array.from(document.querySelectorAll('input[name^="haber_"]'))
+        .reduce((total, input) => total + Number(input.value), 0)
 
     return (
         <div>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <table className="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -42,13 +66,12 @@ export const Create = () => {
                     <tbody>
                         {options}
                         <tr>
+                            <td colSpan={counter === 1 ? '2' : '1'}><button className="btn btn-outline-secondary" onClick={addRow}>Agregar fila</button></td>
                             {
                                 (counter > 1) && <td><button className="btn btn-outline-danger" onClick={subtractRow}>Eliminar última fila</button></td>
                             }
-
-                            <td colSpan={counter === 1 ? '2' : '1'}><button className="btn btn-outline-secondary" onClick={addRow}>Agregar fila</button></td>
-                            <td className="text-center"><h5>Total: <b>$125125</b></h5></td>
-                            <td className="text-center"><h5>Total: <b>$125125</b></h5></td>
+                            <td className="text-center" name="total-debe"><h5>Total: <b>${totalDebe.toFixed(2)}</b></h5></td>
+                            <td className="text-center" name="total-haber"><h5>Total: <b>${totalHaber.toFixed(2)}</b></h5></td>
                         </tr>
                     </tbody>
                 </table>

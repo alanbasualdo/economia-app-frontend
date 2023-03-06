@@ -7,7 +7,6 @@ const tpApi = axios.create({
     baseURL: VITE_API_URL
 })
 
-
 tpApi.interceptors.request.use(config => {
 
     config.headers = {
