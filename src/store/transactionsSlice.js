@@ -16,8 +16,11 @@ export const transactionsSlice = createSlice({
       const { id, ...newTransaction } = action.payload
       const index = state.transactions.findIndex(transaction => transaction.id === id)
       state.transactions[index] = { ...state.transactions[index], ...newTransaction }
+    },
+    getTransaction: (state, { payload = [] }) => {
+      state.transactions = payload
     }
   }
 })
 
-export const { addTransaction, removeTransaction, updateTransaction } = transactionsSlice.actions
+export const { addTransaction, removeTransaction, updateTransaction, getTransaction } = transactionsSlice.actions

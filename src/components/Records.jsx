@@ -1,4 +1,12 @@
+import { useEffect } from "react"
+import { useTransactionsStore } from "../hooks/useTransactionsStore"
+
 export const Records = () => {
+  const { startGetTransaction } = useTransactionsStore()
+
+  useEffect(() => {
+    startGetTransaction()
+  }, [])
 
   return (
     <div className="m-3">

@@ -4,6 +4,7 @@ import { useTransactionsStore } from "../hooks/useTransactionsStore"
 export const Create = () => {
 
     const [counter, setCounter] = useState(1)
+    const [checked, setChecked] = useState(false)
     const { addNewTransaction } = useTransactionsStore()
     const options = []
 
@@ -20,9 +21,7 @@ export const Create = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-
         const formData = new FormData(event.target)
-
         const data = {};
         for (let i = 0; i < counter; i++) {
             data[`cod_cuenta_${i}`] = formData.get(`cod_cuenta_${i}`);
@@ -30,7 +29,6 @@ export const Create = () => {
             data[`debe_${i}`] = formData.get(`debe_${i}`);
             data[`haber_${i}`] = formData.get(`haber_${i}`);
         }
-
         if (data.cod_cuenta_0 === '' && data.cuenta_0 === '' && data.debe_0 === '' && data.haber_0 === '') {
             console.log('vacio')
         } else {
@@ -48,6 +46,10 @@ export const Create = () => {
         setCounter(counter + 1)
     }
 
+    const toggleCheck = () => {
+        setChecked(!checked)
+    }
+
     const totalDebe = Array.from(document.querySelectorAll('input[name^="debe_"]'))
         .reduce((total, input) => total + Number(input.value), 0)
 
@@ -57,7 +59,7 @@ export const Create = () => {
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <table className="table table-striped table-hover">
+                <table className="table table-hover">
                     <thead>
                         <tr>
                             <th scope="col">Cod Cuenta</th>
@@ -78,8 +80,18 @@ export const Create = () => {
                         </tr>
                     </tbody>
                 </table>
-                <div className="d-flex justify-content-end">
-                    <button className="btn btn-outline-success me-3 mb-3" type="submit">Listo</button>
+                <div className="input-group input-group-sm justify-content-end">
+                    <span className="input-group-text">
+                        <div className="form-check form-switch mt-1">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                role="switch"
+                                onChange={toggleCheck}
+                            />
+                        </div>
+                    </span>
+                    <button className="btn btn-outline-success me-3" type="submit" disabled={!checked}>Guardar</button>
                 </div>
             </form>
         </div>
