@@ -4,11 +4,11 @@ import { useAuthStore } from './useAuthStore'
 
 export const useTransactionsStore = () => {
 
-    const { email } = useAuthStore()
+    const { email, id } = useAuthStore()
 
     const addNewTransaction = async (data) => {
-        const { res } = await tpApi.post('/docs', { data, email })
-        console.log(res)
+        console.log(data)
+        const { res } = await tpApi.post('/docs', { data, id })
     }
 
     return {

@@ -4,7 +4,7 @@ import { onChecking, onLogin, onLogout } from "../store/authSlice"
 
 export const useAuthStore = () => {
 
-    const { status, email } = useSelector(state => state.auth)
+    const { status, email, id } = useSelector(state => state.auth)
     const dispatch = useDispatch()
 
     const startLogin = async ({ email, password }) => {
@@ -80,7 +80,7 @@ export const useAuthStore = () => {
         const token = localStorage.getItem('token')
         if (!token) return dispatch(onLogout())
         try {
-            const { data } = await tpApi.get('/renew')
+            const { data } = await tpApi.get('/login/renew')
             localStorage.setItem('token', data.token)
             localStorage.setItem('token-init-date', new Date().getTime())
             dispatch(onLogin(data))
@@ -99,6 +99,7 @@ export const useAuthStore = () => {
         // Propiedades
         status,
         email,
+        id,
 
         // Métodos
         startLogin,
