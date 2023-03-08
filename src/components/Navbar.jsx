@@ -25,8 +25,8 @@ export const Navbar = () => {
     return (
         <nav className="navbar bg-dark py-3">
             <form className="container-fluid justify-content-center">
-                <Link to="/" className="btn btn-outline-success me-3" type="button">Crear registro</Link>
-                <Link to="/records" className="btn btn-outline-primary me-3" type="button">Ver registros</Link>
+                <Link to="/" className="btn btn-sm btn-outline-success me-3" type="button">Crear registro</Link>
+                <Link to="/records" className="btn btn-sm btn-outline-primary me-3" type="button">Ver registros</Link>
                 <button className="btn btn-sm btn-outline-danger" type="button" onClick={(e) => logout(e)}>Salir</button>
             </form>
         </nav>

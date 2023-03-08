@@ -1,9 +1,10 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import tpApi from '../api/tpApi'
 import { useAuthStore } from './useAuthStore'
 import { getTransaction } from '../store/transactionsSlice'
 
 export const useTransactionsStore = () => {
+    const { transactions } = useSelector(state => state.transactions)
     const { id } = useAuthStore()
     const dispatch = useDispatch()
 
@@ -24,18 +25,19 @@ export const useTransactionsStore = () => {
         }
     }
 
-    const startGetTransaction = async (id) => {
+    const startGetTransaction = async () => {
         try {
             const { data } = await tpApi.get(`/docs/${id}`)
-            const docs = data.docs
-            console.log(docs)
-            dispatch(getTransaction(docs))
+            const transactions = data.docs
+            dispatch(getTransaction(transactions))
         } catch (error) {
             console.log(error)
         }
     }
 
     return {
+        transactions,
+
         addNewTransaction,
         startGetTransaction
     }

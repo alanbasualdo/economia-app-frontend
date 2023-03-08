@@ -17,3 +17,11 @@ thead {
     background-color: #e0e0e0;
     text-align: center;
 }
+
+th {
+    font-size: 15px;
+}
+
+td h5 {
+    font-size: 17px;
+}
