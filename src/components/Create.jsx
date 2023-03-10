@@ -3,7 +3,7 @@ import { useTransactionsStore } from "../hooks/useTransactionsStore"
 
 export const Create = () => {
 
-    const [counter, setCounter] = useState(1)
+    const [counter, setCounter] = useState(2)
     const [checked, setChecked] = useState(false)
     const { addNewTransaction } = useTransactionsStore()
     const options = []
@@ -11,8 +11,8 @@ export const Create = () => {
     for (var i = 0; i < counter; i++) {
         options.push(
             <tr key={i}>
-                <th><input type="date" className="form-control form-control-sm" name={`fecha_${i}`} /></th>
-                <th><input type="number" className="form-control form-control-sm" name={`cod_cuenta_${i}`} /></th>
+                <td><input type="date" className="form-control form-control-sm" name={`fecha_${i}`} /></td>
+                <td><input type="number" className="form-control form-control-sm" name={`cod_cuenta_${i}`} /></td>
                 <td><input type="text" className="form-control form-control-sm" name={`cuenta_${i}`} /></td>
                 <td><input type="number" className="form-control form-control-sm" name={`debe_${i}`} /></td>
                 <td><input type="number" className="form-control form-control-sm" name={`haber_${i}`} /></td>
@@ -71,7 +71,7 @@ export const Create = () => {
     const formRef = useRef(null);
 
     return (
-        <div>
+        <div className="p-2">
             <form onSubmit={handleSubmit} ref={formRef}>
                 <table className="table table-hover">
                     <thead>
@@ -86,9 +86,9 @@ export const Create = () => {
                     <tbody>
                         {options}
                         <tr>
-                            <td colSpan={counter === 1 ? '2' : '1'}><button className="btn btn-sm btn-outline-secondary" onClick={addRow}>Agregar fila</button></td>
+                            <td colSpan={counter === 2 ? '2' : '1'}><button className="btn btn-sm btn-outline-secondary" onClick={addRow}>Agregar fila</button></td>
                             {
-                                (counter > 1) && <td><button className="btn btn-sm btn-outline-danger" onClick={subtractRow}>Eliminar última fila</button></td>
+                                (counter > 2) && <td><button className="btn btn-sm btn-outline-danger" onClick={subtractRow}>Eliminar última fila</button></td>
                             }
                             <td></td>
                             <td className="text-center" name="total-debe"><h5><b>${totalDebe.toFixed(2)}</b></h5></td>

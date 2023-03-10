@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit'
 export const transactionsSlice = createSlice({
   name: 'transactions',
   initialState: {
-    transactions: []
+    transactions: [],
+    status: null
   },
   reducers: {
     addTransaction: (state, action) => {
@@ -18,7 +19,8 @@ export const transactionsSlice = createSlice({
       state.transactions[index] = { ...state.transactions[index], ...newTransaction }
     },
     getTransaction: (state, { payload = [] }) => {
-      state.transactions = payload
+      state.transactions = payload,
+      state.status = 'loaded'
     }
   }
 })

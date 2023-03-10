@@ -4,7 +4,7 @@ import { useAuthStore } from './useAuthStore'
 import { getTransaction } from '../store/transactionsSlice'
 
 export const useTransactionsStore = () => {
-    const { transactions } = useSelector(state => state.transactions)
+    const { transactions, status } = useSelector(state => state.transactions)
     const { id } = useAuthStore()
     const dispatch = useDispatch()
 
@@ -37,6 +37,7 @@ export const useTransactionsStore = () => {
 
     return {
         transactions,
+        status,
 
         addNewTransaction,
         startGetTransaction
