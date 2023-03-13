@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react"
 import { useTransactionsStore } from "../hooks/useTransactionsStore"
-import { Modal, Button, Spinner } from "react-bootstrap";
-import Table from 'react-bootstrap/Table';
+import { Modal, Button, Spinner } from "react-bootstrap"
+import Table from 'react-bootstrap/Table'
 
 export const Records = () => {
   const { startGetTransaction, transactions, status } = useTransactionsStore()
-
-  const [showModal, setShowModal] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [showModal, setShowModal] = useState(false)
+  const [selectedTransaction, setSelectedTransaction] = useState(null)
 
   useEffect(() => {
     startGetTransaction()
@@ -30,13 +29,15 @@ export const Records = () => {
                   <a
                     href="#"
                     onClick={() => {
-                      setShowModal(true);
-                      setSelectedTransaction(m);
+                      setShowModal(true)
+                      setSelectedTransaction(m)
                     }}
                     className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                   >
-                    <span className="mr-2">Registro: {m.id}</span>
-                    <span>Fecha de creación: {m.createdAt}</span>
+                    {/* <span className="mr-2">Registro: {m.id}</span> */}
+                    <span className="mr-2">{m.data.company}</span>
+                    {/* <span className="mr-2">Actividad: {new Date(m.data.start).toLocaleDateString("es-AR")}</span> */}
+                    <span>{m.createdAt}</span>
                   </a>
                 </div>
               ))}
@@ -47,12 +48,21 @@ export const Records = () => {
                 <Modal.Body>
                   {selectedTransaction && (
                     <>
+                      <div className="text-center">
+                        <h5>{selectedTransaction.data.company}</h5>
+                        <p>Inicio de actividad: {
+                          selectedTransaction.data.start && !isNaN(Date.parse(selectedTransaction.data.start)) ?
+                            new Date(selectedTransaction.data.start).toLocaleDateString("es-AR") :
+                            selectedTransaction.data.start
+                        }
+                        </p>
+                      </div>
                       <Table striped bordered hover>
                         <thead>
                           <tr>
                             <th>Fecha</th>
-                            <th>Cod Cuenta</th>
-                            <th>Cuenta</th>
+                            <th>VP</th>
+                            <th>Detalle</th>
                             <th>Debe</th>
                             <th>Haber</th>
                           </tr>
@@ -61,11 +71,16 @@ export const Records = () => {
                           {Object.keys(selectedTransaction.data).map((key) => (
                             key.startsWith("fecha") && (
                               <tr key={key}>
-                                <td>{selectedTransaction.data[key]}</td>
                                 <td>
-                                  {selectedTransaction.data[`cod_cuenta_${key.slice(-1)}`]}
+                                  {selectedTransaction.data[key] && !isNaN(Date.parse(selectedTransaction.data[key])) ?
+                                    new Date(selectedTransaction.data[key]).toLocaleDateString("es-AR") :
+                                    selectedTransaction.data[key]
+                                  }
                                 </td>
-                                <td>{selectedTransaction.data[`cuenta_${key.slice(-1)}`]}</td>
+                                <td>
+                                  {selectedTransaction.data[`vp_${key.slice(-1)}`]}
+                                </td>
+                                <td>{selectedTransaction.data[`detalle_${key.slice(-1)}`]}</td>
                                 <td>
                                   {selectedTransaction.data[`debe_${key.slice(-1)}`] ? (
                                     `$${selectedTransaction.data[`debe_${key.slice(-1)}`]}`
