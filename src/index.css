@@ -1,33 +1,33 @@
 body {
-    font-family: 'Ubuntu', sans-serif;
+  font-family: "Ubuntu", sans-serif;
 }
 
 a {
-    text-decoration: none;
-    color: white;
+  text-decoration: none;
+  color: white;
 }
 
 a:hover {
-    color: white;
+  color: white;
 }
 
 thead {
-    position: sticky;
-    top: 0;
-    background-color: #e0e0e0;
-    text-align: center;
+  position: sticky;
+  top: 0;
+  background-color: #e0e0e0;
+  text-align: center;
 }
 
 th {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 td h5 {
-    font-size: 17px;
+  font-size: 17px;
 }
 
 .create {
-    border: 1px solid rgba(0, 0, 0, 0.200);
-    border-radius: 10px;
-    margin: 1em 1em;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  margin: 1em 1em;
 }
