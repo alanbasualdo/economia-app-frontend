@@ -63,7 +63,6 @@ export const Journal = () => {
               </option>
             </optgroup>
           </select>
-          {/*  <input type="text" className="form-control form-control-sm" name={`vp_${i}`} /> */}
         </td>
         <td>
           <input
@@ -94,14 +93,14 @@ export const Journal = () => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = {
-      company: formData.get("company"),
+      company: formData.get("company").toUpperCase(),
       start: formData.get("start"),
     };
 
     for (let i = 0; i < counter; i++) {
       data[`fecha_${i}`] = formData.get(`fecha_${i}`);
       data[`vp_${i}`] = formData.get(`vp_${i}`);
-      data[`detalle_${i}`] = formData.get(`detalle_${i}`);
+      data[`detalle_${i}`] = formData.get(`detalle_${i}`).toUpperCase();
       data[`debe_${i}`] = formData.get(`debe_${i}`);
       data[`haber_${i}`] = formData.get(`haber_${i}`);
     }

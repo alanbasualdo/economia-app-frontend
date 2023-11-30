@@ -45,7 +45,7 @@ export const Records = () => {
                 size="lg"
               >
                 <Modal.Header closeButton>
-                  <Modal.Title>Detalles de la operación</Modal.Title>
+                  <Modal.Title>Libro diario</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   {selectedTransaction && (
