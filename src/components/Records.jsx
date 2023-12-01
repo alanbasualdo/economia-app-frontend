@@ -32,9 +32,7 @@ export const Records = () => {
                     }}
                     className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                   >
-                    {/* <span className="mr-2">Registro: {m.id}</span> */}
                     <span className="mr-2">{m.data.company}</span>
-                    {/* <span className="mr-2">Actividad: {new Date(m.data.start).toLocaleDateString("es-AR")}</span> */}
                     <span>{m.createdAt}</span>
                   </a>
                 </div>

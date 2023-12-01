@@ -105,6 +105,25 @@ export const Journal = () => {
       data[`haber_${i}`] = formData.get(`haber_${i}`);
     }
 
+    const totalDebe = Array.from(
+      document.querySelectorAll('input[name^="debe_"]')
+    ).reduce((total, input) => total + Number(input.value), 0);
+
+    const totalHaber = Array.from(
+      document.querySelectorAll('input[name^="haber_"]')
+    ).reduce((total, input) => total + Number(input.value), 0);
+
+    if (totalDebe !== totalHaber) {
+      Swal.fire({
+        position: "top",
+        icon: "error",
+        title: "Debe haber partida doble",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return;
+    }
+
     if (
       data.fecha_0 === "" &&
       data.vp_0 === "" &&

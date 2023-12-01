@@ -1,31 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useTransactionsStore } from "../hooks/useTransactionsStore";
-
-const EmpresasList = ({ empresas, onEmpresaClick }) => (
-  <div className="list-group">
-    {empresas.map((empresa) => (
-      <button
-        key={empresa}
-        type="button"
-        className="list-group-item list-group-item-action"
-        onClick={() => onEmpresaClick(empresa)}
-      >
-        {empresa}
-      </button>
-    ))}
-  </div>
-);
+import { ListaDeEmpresas } from "../components/ListaDeEmpresas";
+import { Spinner } from "react-bootstrap";
 
 export const Ledger = () => {
-  const { transactions, startGetTransaction } = useTransactionsStore();
-
+  const { transactions, startGetTransaction, status } = useTransactionsStore();
   const [empresaSeleccionada, setEmpresaSeleccionada] = useState(null);
 
-  // Crear un objeto para almacenar registros agrupados por empresa y luego por cuenta
   const registrosPorEmpresa = {};
 
   transactions.forEach((libro) => {
-    const empresa = libro.data.company; // Obtener el valor de la empresa de la transacción
+    const empresa = libro.data.company;
 
     if (!registrosPorEmpresa[empresa]) {
       registrosPorEmpresa[empresa] = {};
@@ -36,7 +21,6 @@ export const Ledger = () => {
     );
 
     detalleEntries.forEach(([key, value]) => {
-      // Almacenar el debe y haber para cada valor en detalle_
       const debeKey = `debe_${key.substring(8)}`;
       const haberKey = `haber_${key.substring(8)}`;
       const debeValue = parseFloat(libro.data[debeKey]) || 0;
@@ -44,7 +28,6 @@ export const Ledger = () => {
 
       const cuenta = value;
 
-      // Verificar si tanto el debe como el haber son diferentes de 0 antes de agregar el registro
       if (
         (debeValue !== 0 || haberValue !== 0) &&
         !registrosPorEmpresa[empresa][cuenta]
@@ -52,7 +35,6 @@ export const Ledger = () => {
         registrosPorEmpresa[empresa][cuenta] = [];
       }
 
-      // Agregar el registro solo si alguno de los valores es diferente de 0
       if (debeValue !== 0 || haberValue !== 0) {
         registrosPorEmpresa[empresa][cuenta].push({
           id: libro._id,
@@ -65,87 +47,120 @@ export const Ledger = () => {
     });
   });
 
-  useEffect(() => {
-    startGetTransaction();
-  }, []);
-
   const empresas = Object.keys(registrosPorEmpresa);
 
   const handleEmpresaClick = (empresa) => {
     setEmpresaSeleccionada(empresa);
   };
 
+  useEffect(() => {
+    startGetTransaction();
+  }, []);
+
   return (
-    <div className="p-4 text-center d-flex align-items-center justify-content-center flex-wrap gap-2">
-      <div className="w-25">
-        <h3>Seleccionar empresa</h3>
-        <EmpresasList empresas={empresas} onEmpresaClick={handleEmpresaClick} />
-      </div>
-      {empresaSeleccionada && (
-        <div className="w-75 border rounded p-3 mt-5">
-          <h3>{`Libro Mayor - ${empresaSeleccionada}`}</h3>
-          {Object.entries(registrosPorEmpresa[empresaSeleccionada]).map(
-            ([cuenta, registros]) => {
-              const totalDebe = registros.reduce(
-                (total, registro) => total + registro.debe,
-                0
-              );
-              const totalHaber = registros.reduce(
-                (total, registro) => total + registro.haber,
-                0
-              );
-              const saldoTotal = totalDebe - totalHaber;
-
-              const saldoType =
-                saldoTotal > 0
-                  ? "Saldo Deudor"
-                  : saldoTotal < 0
-                  ? "Saldo Acreedor"
-                  : "Saldo Cero";
-
-              const registrosReversed = [...registros].reverse();
-
-              return (
-                <div key={cuenta} className="py-3 border rounded w-full my-3">
-                  <h4>{cuenta}</h4>
-                  <div className="table-responsive">
-                    <table className="table table-striped table-hover table-sm">
-                      <thead>
-                        <tr>
-                          <th scope="col">Fecha</th>
-                          <th scope="col">Debe</th>
-                          <th scope="col">Haber</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {registrosReversed.map((registro, index) => (
-                          <tr key={index}>
-                            <td>{registro.fecha}</td>
-                            <td>{registro.debe}</td>
-                            <td>{registro.haber}</td>
-                          </tr>
-                        ))}
-                        <tr>
-                          <td>
-                            <b>Total</b>
-                          </td>
-                          <td>{totalDebe}</td>
-                          <td>{totalHaber}</td>
-                        </tr>
-                        <tr>
-                          <td colSpan="3">
-                            <b>{saldoType}</b>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+    <>
+      {status === "loaded" ? (
+        <>
+          {transactions.length === 0 ? (
+            <div className="text-center mt-3">
+              <h3>No hay registros que mostrar</h3>
+            </div>
+          ) : (
+            <>
+              <div className="p-4 text-center d-flex align-items-center justify-content-center flex-wrap gap-2">
+                <div className="w-25">
+                  <h3>Seleccionar empresa</h3>
+                  <ListaDeEmpresas
+                    empresas={empresas}
+                    onEmpresaClick={handleEmpresaClick}
+                  />
                 </div>
-              );
-            }
+                {empresaSeleccionada && (
+                  <div className="w-75 border rounded p-3 mt-5">
+                    <h3>{`Libro Mayor - ${empresaSeleccionada}`}</h3>
+                    {Object.entries(
+                      registrosPorEmpresa[empresaSeleccionada]
+                    ).map(([cuenta, registros]) => {
+                      const totalDebe = registros.reduce(
+                        (total, registro) => total + registro.debe,
+                        0
+                      );
+                      const totalHaber = registros.reduce(
+                        (total, registro) => total + registro.haber,
+                        0
+                      );
+                      const saldoTotal = totalDebe - totalHaber;
+
+                      const saldoType =
+                        saldoTotal > 0
+                          ? "Saldo Deudor"
+                          : saldoTotal < 0
+                          ? "Saldo Acreedor"
+                          : "Saldo Cero";
+
+                      const registrosReversed = [...registros].reverse();
+
+                      const diferenciaTotal =
+                        saldoType === "Saldo Deudor" ||
+                        saldoType === "Saldo Acreedor"
+                          ? saldoTotal
+                          : 0;
+
+                      return (
+                        <div
+                          key={cuenta}
+                          className="py-3 border rounded w-full my-3"
+                        >
+                          <h4>{cuenta}</h4>
+                          <div className="table-responsive">
+                            <table className="table table-striped table-hover table-sm">
+                              <thead>
+                                <tr>
+                                  <th scope="col">Fecha</th>
+                                  <th scope="col">Debe</th>
+                                  <th scope="col">Haber</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {registrosReversed.map((registro, index) => (
+                                  <tr key={index}>
+                                    <td>{registro.fecha}</td>
+                                    <td>{registro.debe}</td>
+                                    <td>{registro.haber}</td>
+                                  </tr>
+                                ))}
+                                <tr>
+                                  <td>
+                                    <b>Total</b>
+                                  </td>
+                                  <td>{totalDebe}</td>
+                                  <td>{totalHaber}</td>
+                                </tr>
+                                <tr>
+                                  <td colSpan="3">
+                                    <b>{saldoType}</b>
+                                    {diferenciaTotal !== 0 && (
+                                      <span>: ${diferenciaTotal}</span>
+                                    )}
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </>
           )}
+        </>
+      ) : (
+        <div className="text-center mt-5">
+          <Spinner animation="border" />
         </div>
       )}
-    </div>
+    </>
   );
 };
